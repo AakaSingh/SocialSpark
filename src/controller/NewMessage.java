@@ -1,9 +1,10 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,16 +17,16 @@ import db.UserDbUtil;
 import model.User;
 
 /**
- * Servlet implementation class LoadProfile
+ * Servlet implementation class NewMessage
  */
-@WebServlet("/LoadProfile")
-public class LoadProfile extends HttpServlet {
+@WebServlet("/NewMessage")
+public class NewMessage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoadProfile() {
+    public NewMessage() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -49,40 +50,29 @@ public class LoadProfile extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<String> friends = new ArrayList<>();
-		String profileU = request.getParameter("profileUser");
-		HttpSession session =  request.getSession();
-		User profileUser;
-		
-		if(profileU.equals("none"))
+		String content = request.getParameter("txt");
+		HttpSession session = request.getSession();
+		User sender = (User)session.getAttribute("currentUser");
+		User reciever = (User)session.getAttribute("chatUser");
+		if(!content.equals(""))
 		{
-			profileUser = (User)session.getAttribute("profileUser");
-			try {
-			friends = userdb.getFriends(profileUser);
-			session.setAttribute("friends", friends);
-			response.sendRedirect("UserProfile.jsp");
+			Date date = new Date();
+			try
+			{
+				userdb.addMessage(sender.getUserId(),reciever.getUserId(), content , date);
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadMessages?chat="+reciever.getUserName());
+			dispatcher.forward(request,response);
 		}
 		else
 		{
-			try 
-			{
-				profileUser = userdb.searchUsername(profileU);
-				friends = userdb.getFriends(profileUser);
-				session.setAttribute("friends", friends);
-				session.setAttribute("profileUser", profileUser);
-				response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadMessages?chat="+reciever.getUserName());
+			dispatcher.forward(request,response);
 		}
-		
 		
 	}
 

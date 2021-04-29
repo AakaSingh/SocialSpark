@@ -4,15 +4,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.sql.DataSource;
 
+import model.Message;
 import model.Post;
 import model.User;
 
 public class UserDbUtil {
 	DataSource ds;
+	Connection conn = null;
+	Statement stmt = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
 	
 	public UserDbUtil(DataSource ds)
 	{
@@ -23,10 +30,6 @@ public class UserDbUtil {
 	{
 		User tempUser = null;
 		ArrayList<Post> posts = new ArrayList<>();
-		Connection conn = null;
-		Statement stmt = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		
 		try
 		{
@@ -56,11 +59,6 @@ public class UserDbUtil {
 	{
 		ArrayList<String> friends = new ArrayList<>();
 		
-		Connection conn = null;
-		Statement stmt = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
 		try
 		{
 			conn = this.ds.getConnection();
@@ -89,11 +87,6 @@ public class UserDbUtil {
 			return false;
 		}
 		
-		Connection conn = null;
-		Statement stmt = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
 		try
 		{
 			conn = this.ds.getConnection();
@@ -109,18 +102,60 @@ public class UserDbUtil {
 		}
 	}
 	
+	public ArrayList<Message> getMessages(User sender,User reciever) throws Exception
+	{
+		ArrayList<Message> messages = new ArrayList<>();
+		
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from messages where (sender_id = "+ sender.getUserId()+" and reciever_id = "+ reciever.getUserId()+") or (sender_id = "+reciever.getUserId()+" and reciever_id = "+sender.getUserId()+")";
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next())
+			{
+				messages.add(new Message(rs.getInt("sender_id"),rs.getString("msg_content"),rs.getString("time").toString()));
+			}
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+		
+		return messages;
+	}
+	
+	public void addMessage(int senderId, int recieverId, String msg_content, Date time) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			Timestamp t = new Timestamp(time.getTime());
+			String sql = "insert into messages values("+senderId+","+recieverId+","+msg_content+","+t+")";
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
 	
 	void close(Connection conn,Statement stmt,PreparedStatement pstmt,ResultSet rs)
 	{
 		try {
 		if(conn !=null)
+		{
 			conn.close();
+			conn=null;
+		}
 		if(stmt !=null)
-			stmt.close();
+			stmt=null;
 		if(pstmt !=null)
-			pstmt.close();
+			pstmt=null;
 		if(rs !=null)
-			rs.close();
+			rs=null;
 		}
 		catch(Exception e)
 		{

@@ -44,6 +44,7 @@
 </div>
 </c:forEach>
 
+<a href = "FriendsList.jsp">Chat</a>
 
 </body>
 </html>

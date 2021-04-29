@@ -13,19 +13,20 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import db.UserDbUtil;
+import model.Message;
 import model.User;
 
 /**
- * Servlet implementation class LoadProfile
+ * Servlet implementation class LoadMessages
  */
-@WebServlet("/LoadProfile")
-public class LoadProfile extends HttpServlet {
+@WebServlet("/LoadMessages")
+public class LoadMessages extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoadProfile() {
+    public LoadMessages() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,47 +44,28 @@ public class LoadProfile extends HttpServlet {
 		
 		userdb = new UserDbUtil(ds);
 	}
-
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<String> friends = new ArrayList<>();
-		String profileU = request.getParameter("profileUser");
+		ArrayList<Message> messages = new ArrayList<>();
+		String chatU = request.getParameter("chat");
 		HttpSession session =  request.getSession();
-		User profileUser;
 		
-		if(profileU.equals("none"))
-		{
-			profileUser = (User)session.getAttribute("profileUser");
-			try {
-			friends = userdb.getFriends(profileUser);
-			session.setAttribute("friends", friends);
-			response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+		try {
+		User chatUser = userdb.searchUsername(chatU);
+		User currentUser = (User)session.getAttribute("currentUser");
+		messages = userdb.getMessages(currentUser, chatUser);
+		session.setAttribute("chatUser", chatUser);
+		session.setAttribute("messages", messages);
+		response.sendRedirect("./Messages.jsp");
 		}
-		else
+		catch(Exception e)
 		{
-			try 
-			{
-				profileUser = userdb.searchUsername(profileU);
-				friends = userdb.getFriends(profileUser);
-				session.setAttribute("friends", friends);
-				session.setAttribute("profileUser", profileUser);
-				response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
-		
-		
 	}
 
 	/**
