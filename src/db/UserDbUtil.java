@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.sql.DataSource;
 
@@ -126,14 +124,13 @@ public class UserDbUtil {
 		return messages;
 	}
 	
-	public void addMessage(int senderId, int recieverId, String msg_content, Date time) throws Exception
+	public void addMessage(int senderId, int recieverId, String msg_content) throws Exception
 	{
 		try
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			Timestamp t = new Timestamp(time.getTime());
-			String sql = "insert into messages values("+senderId+","+recieverId+","+msg_content+","+t+")";
+			String sql = "insert into messages values("+senderId+","+recieverId+",'"+msg_content+"',current_time)";
 			stmt.executeUpdate(sql);
 		}
 		finally

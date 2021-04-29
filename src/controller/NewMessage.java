@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
@@ -56,10 +55,9 @@ public class NewMessage extends HttpServlet {
 		User reciever = (User)session.getAttribute("chatUser");
 		if(!content.equals(""))
 		{
-			Date date = new Date();
 			try
 			{
-				userdb.addMessage(sender.getUserId(),reciever.getUserId(), content , date);
+				userdb.addMessage(sender.getUserId(),reciever.getUserId(), content);
 			}
 			catch(Exception e)
 			{
