@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -16,20 +15,21 @@ import db.UserDbUtil;
 import model.User;
 
 /**
- * Servlet implementation class LoadProfile
+ * Servlet implementation class FriendActions
  */
-@WebServlet("/LoadProfile")
-public class LoadProfile extends HttpServlet {
+@WebServlet("/FriendActions")
+public class FriendActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoadProfile() {
+    public FriendActions() {
         super();
         // TODO Auto-generated constructor stub
     }
     
+
     @Resource(name="jdbc/socialproject")
     private DataSource ds;
     private UserDbUtil userdb;
@@ -44,46 +44,37 @@ public class LoadProfile extends HttpServlet {
 		userdb = new UserDbUtil(ds);
 	}
 
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<String> friends = new ArrayList<>();
-		String profileU = request.getParameter("profileUser");
-		HttpSession session =  request.getSession();
-		User profileUser;
 		
-		if(profileU.equals("none"))
+		HttpSession session = request.getSession();
+		String action = request.getParameter("act");
+		User cUser = (User)session.getAttribute("currentUser");
+		try 
 		{
-			profileUser = (User)session.getAttribute("profileUser");
-			try {
-			friends = userdb.getFriends(profileUser);
-			session.setAttribute("userFriends", friends);
-			session.setAttribute("friends", friends);
-			response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			User friend = (User)userdb.searchUsername(request.getParameter("friend"));
+			
+				if(action.equals("rem"))
+				{
+					userdb.removeFriend(cUser, friend);
+				}
+				else if(action.equals("req"))
+				{
+					userdb.sendRequest(cUser, friend);
+				}
+				else if(action.equals("acc"))
+				{
+					//userdb.acceptRequest(, cUser, friend);
+				}
 		}
-		else
+		catch(Exception e)
 		{
-			try 
-			{
-				profileUser = userdb.searchUsername(profileU);
-				friends = userdb.getFriends(profileUser);
-				session.setAttribute("friends", friends);
-				session.setAttribute("profileUser", profileUser);
-				response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
-		
 		
 	}
 

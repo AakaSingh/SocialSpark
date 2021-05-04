@@ -13,12 +13,13 @@ public class Post {
 	int likes;
 	ArrayList<Comment> comments;
 	
-	public Post(int userId, int postId, String content, String date) {
+	public Post(int userId, int postId, String content, String date, int likes) {
 		
 		this.userId = userId;
 		this.postId = postId;
 		this.content = content;
 		this.date = date;
+		this.likes = likes;
 	}
 	
 	public Post(int userId, int postId, String content) {

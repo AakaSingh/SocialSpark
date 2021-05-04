@@ -139,6 +139,94 @@ public class UserDbUtil {
 		}
 	}
 	
+	public void notifSeen(int user) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "delete from notifications where reciever_id = "+ user + " and type = 1";
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void acceptRequest(int notifId,int userOne, int userTwo) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "delete from notifications where notif_id = "+ notifId;
+			stmt.executeUpdate(sql);
+			sql = "insert into friends values("+userOne+","+userTwo+",1)";
+			sql = "insert into friends values("+userTwo+","+userOne+",1)";
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void removeFriend(User sender, User reciever) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "delete from friends where userid_one = "+sender.getUserId()+" and userid_two = "+ reciever.getUserId();
+			stmt.executeUpdate(sql);
+			sql = "delete from friends where userid_one = "+reciever.getUserId()+" and userid_two = "+ sender.getUserId();
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void sendRequest(User sender, User reciever) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "insert into notifications(sender_id,reciever_id,type,time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void likeDislikePost(int userId, int postId) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from likesdata where user_id = "+ userId + " and post_id = "+ postId;
+			rs = stmt.executeQuery(sql);
+			
+			if(rs.next())
+				sql = "delete from likesdata where user_id = "+ userId + " and post_id = "+ postId;
+			
+			else
+				sql = "insert into likesdata values("+ postId +","+userId+")";
+			
+			System.out.print(sql);
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
 	void close(Connection conn,Statement stmt,PreparedStatement pstmt,ResultSet rs)
 	{
 		try {

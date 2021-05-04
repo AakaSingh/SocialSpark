@@ -24,6 +24,11 @@
     border: 1px solid;
 }
 
+.chatbox::-webkit-scrollbar
+{
+	display: none;
+}
+
 .txtblob{
 	background-color: lightblue;
 	width: 200px;
@@ -32,6 +37,7 @@
 	margin: 5px 0px 5px 0px;
 	border-radius: 10px;
 	padding: 2px;
+	box-shadow :  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 table{
