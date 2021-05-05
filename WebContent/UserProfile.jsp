@@ -49,9 +49,12 @@ table
 </head>
 <body>
 
-<h1> Current User : ${currentUser} </h1>
+<h1> ${profileUser.getUserName()} 's Profile</h1>
 
-<h1> ${profileUser} 's Profile</h1>
+<c:if test="${profileUser.getUserName().equals(currentUser.getUserName())}">
+<a href="./Notifications.jsp">Notifications : ${notifications.size()}</a>
+</c:if>
+
 
 <h3>Friends : </h3>
 <table>

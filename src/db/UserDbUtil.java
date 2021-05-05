@@ -3,12 +3,14 @@ package db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
 import model.Message;
+import model.Notification;
 import model.Post;
 import model.User;
 
@@ -52,6 +54,35 @@ public class UserDbUtil {
 		return tempUser;	
 	}
 	
+	public User getUserById(int id) throws Exception
+	{
+		User u = null;
+		conn = this.ds.getConnection();
+		String sql = "select * from user where user_id = "+id;
+		stmt = conn.createStatement();
+		rs = stmt.executeQuery(sql);
+		
+		while(rs.next())
+		{
+			u = new User(rs.getString("fname"),rs.getString("lname"),rs.getString("uname"));
+		}
+		return u;
+	}
+	
+	public ArrayList<Notification> getNotificationById(int userId) throws Exception
+	{
+		ArrayList<Notification> notifications = new ArrayList<>();
+		conn = this.ds.getConnection();
+		String sql = "select * from notification where reciever_id = "+userId;
+		stmt = conn.createStatement();
+		rs = stmt.executeQuery(sql);
+		
+		while(rs.next())
+		{
+			notifications.add(new Notification(rs.getInt("notif_id"),getUserById(rs.getInt("sender_id")),rs.getInt("notif_type")));
+		}  
+		return notifications;
+	}
 	
 	public ArrayList<String> getFriends(User user) throws Exception
 	{
@@ -60,7 +91,6 @@ public class UserDbUtil {
 		try
 		{
 			conn = this.ds.getConnection();
-			
 			String sql = "select u.uname from friends f join user u on f.userid_two = u.user_id where f.userid_one ="+user.getUserId()+" and f.type = 1";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
@@ -132,6 +162,8 @@ public class UserDbUtil {
 			stmt = conn.createStatement();
 			String sql = "insert into messages values("+senderId+","+recieverId+",'"+msg_content+"',current_time)";
 			stmt.executeUpdate(sql);
+			sql = "insert into notification(sender_id,reciever_id,notif_type,time) values("+senderId+","+recieverId+",1,current_time)";
+			stmt.executeUpdate(sql);
 		}
 		finally
 		{
@@ -145,7 +177,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "delete from notifications where reciever_id = "+ user + " and type = 1";
+			String sql = "delete from notification where reciever_id = "+ user + " and notif_type = 1";
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -160,7 +192,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "delete from notifications where notif_id = "+ notifId;
+			String sql = "delete from notification where notif_id = "+ notifId;
 			stmt.executeUpdate(sql);
 			sql = "insert into friends values("+userOne+","+userTwo+",1)";
 			sql = "insert into friends values("+userTwo+","+userOne+",1)";
@@ -194,7 +226,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "insert into notifications(sender_id,reciever_id,type,time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
+			String sql = "insert into notification(sender_id,reciever_id,notif_type,time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
 			stmt.executeUpdate(sql);
 		}
 		finally

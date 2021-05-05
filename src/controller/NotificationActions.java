@@ -1,9 +1,9 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,16 +16,16 @@ import db.UserDbUtil;
 import model.User;
 
 /**
- * Servlet implementation class LoadProfile
+ * Servlet implementation class NotificationActions
  */
-@WebServlet("/LoadProfile")
-public class LoadProfile extends HttpServlet {
+@WebServlet("/NotificationActions")
+public class NotificationActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoadProfile() {
+    public NotificationActions() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,55 +43,28 @@ public class LoadProfile extends HttpServlet {
 		
 		userdb = new UserDbUtil(ds);
 	}
-
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<String> friends = new ArrayList<>();
-		String profileU = request.getParameter("profileUser");
-		HttpSession session =  request.getSession();
+		String action = request.getParameter("act");
+		HttpSession session = request.getSession();
 		User currentUser = (User)session.getAttribute("currentUser");
-		User profileUser;
-		
-		
-		if(profileU.equals("none"))
+		try 
 		{
-			profileUser = (User)session.getAttribute("profileUser");
-			try {
-			friends = userdb.getFriends(profileUser);
-			session.setAttribute("notifications", userdb.getNotificationById(profileUser.getUserId()));
-			session.setAttribute("userFriends", friends);
-			session.setAttribute("friends", friends);
-			response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
+			if(action.equals("clr"))
 			{
-				e.printStackTrace();
+				userdb.notifSeen(currentUser.getUserId());
+				RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+currentUser.getUserName());
+				dispatcher.forward(request,response);
 			}
 		}
-		else
+		catch(Exception e)
 		{
-			try 
-			{
-				if(profileU.equals(currentUser.getUserName()))
-				{
-					session.setAttribute("notifications", userdb.getNotificationById(currentUser.getUserId()));
-				}
-				profileUser = userdb.searchUsername(profileU);
-				friends = userdb.getFriends(profileUser);
-				session.setAttribute("friends", friends);
-				session.setAttribute("profileUser", profileUser);
-				response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
-		
-		
 	}
 
 	/**

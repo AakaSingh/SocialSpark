@@ -21,6 +21,13 @@ public class User {
 		this.posts = posts;
 	}
 	
+	public User(String fName, String lName, String userName) {
+		
+		this.fName = fName;
+		this.lName = lName;
+		this.userName = userName;
+	}
+	
 	public ArrayList<Post> getPosts()
 	{
 		return posts;

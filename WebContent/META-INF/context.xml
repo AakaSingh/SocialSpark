@@ -2,7 +2,7 @@
   <Resource name="jdbc/socialproject" 
   			auth="Container" type="javax.sql.DataSource"
                maxActive="20" maxIdle="5" maxWait="10000"
-               username="root" password="password" 
+               username="root" password="handsomeman1" 
                driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://localhost:3306/socialproject?useSSL=false"/>
 </Context>
