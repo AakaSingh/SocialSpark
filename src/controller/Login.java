@@ -64,6 +64,7 @@ public class Login extends HttpServlet {
 					HttpSession session = request.getSession();
 					session.setAttribute("currentUser", currentUser);
 					session.setAttribute("profileUser", currentUser);
+					session.setAttribute("allUsers", userdb.getAllUserNames());
 					RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser=none");
 					dispatcher.forward(request,response);
 				}

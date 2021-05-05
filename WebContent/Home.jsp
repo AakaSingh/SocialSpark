@@ -5,13 +5,9 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>User Profile</title>
-<style>
-body
-{
-	background-image : linear-gradient(to right, rgba(105, 34, 199,0), rgba(105, 34, 199,1));
-}
+<title>Insert title here</title>
 
+<style>
 .postDiv
 {
 	box-shadow :  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -47,41 +43,18 @@ table
 </style>
 
 </head>
-
 <body>
+<h1>Home Feed</h1>
 
-<jsp:include page="./topBar.jsp"/>
-
-<h1> ${profileUser.getUserName()} 's Profile</h1>
-
-<c:if test="${profileUser.getUserName().equals(currentUser.getUserName())}">
-<a href="./Notifications.jsp">Notifications : ${notifications.size()}</a>
-</c:if>
-
-
-<h3>Friends : </h3>
-<table>
-<c:forEach var="temp" items="${friends}">
-	<tr><td><a href="./LoadProfile?profileUser=${temp}">${temp}</a></td></tr>
-	<c:choose>
-		<c:when test="${userFriends.indexOf(temp) == -1}">
-				<a href=".FriendActions/friend=${temp}&act=req"><button>Send Request</button></a>
-		</c:when>
-		<c:otherwise>
-				<a href=".FriendActions/friend=${temp}&act=rem"><button>Remove Friend</button></a>
-		</c:otherwise>
-	</c:choose>
-</c:forEach>
-</table>
-
-<c:forEach var="temp" items="${profileUser.getPosts()}">
-<div class="postDiv">
+<c:forEach var="temp" items="${allPosts}">
+	<div class="postDiv">
 	<table>
 	<tr><td>${profileUser.getUserName()}</td></tr>
+	<tr>
 	<c:choose>
 	<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
 	<form method="post" action="./PostActions?act=edit&pId=${temp.getPostId()}">
-	<tr><td  colspan = "3"><textarea name="postContent">${temp.content}</textarea></td></tr>
+	<td  colspan = "3"><textarea name="postContent">${temp.content}</textarea></td>
 	<tr><td><button id="edit" name="edit" type="submit">Save Edit</button></td>
 	</form>
 	<td><a href="./PostActions?act=del&pId=${temp.getPostId()}"><button>Delete</button></a></td>
@@ -96,10 +69,6 @@ table
 	</table>
 </div>
 </c:forEach>
-<br>
-<c:if test="${profileUser.getUserName().equals(currentUser.getUserName())}">
-<a href = "FriendsList.jsp">Chat</a>
-</c:if>
 
 </body>
 </html>

@@ -88,6 +88,40 @@ public class PostDbUtil {
 		
 	}
 	
+	public ArrayList<Post> getAllPosts() throws Exception
+	{
+ArrayList<Post> posts = new ArrayList<>();
+		
+		try
+		{
+			conn = this.ds.getConnection();
+			
+			String sql = "select * from post order by post_date" ;
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			ResultSet rstemp = null;
+			int noOfLikes;
+			
+			while(rs.next())
+			{
+				rstemp = null;
+				noOfLikes = 0;
+				sql = "select count(*) as nooflikes from likesdata where post_id = " + rs.getInt("post_id");
+				stmt = conn.createStatement();
+				rstemp = stmt.executeQuery(sql);
+				if(rstemp.next())
+					noOfLikes = rstemp.getInt("nooflikes");
+				posts.add(new Post(rs.getInt("user_id"),rs.getInt("post_id"),rs.getString("content"),rs.getString("post_date").toString(),noOfLikes));	
+			}
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}		
+		
+		return posts;
+	}
+	
 	
 	void close(Connection conn,Statement stmt,PreparedStatement pstmt,ResultSet rs)
 	{

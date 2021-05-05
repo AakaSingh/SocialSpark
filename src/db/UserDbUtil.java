@@ -25,6 +25,21 @@ public class UserDbUtil {
 	{
 		this.ds = ds;
 	}
+	
+	public ArrayList<String> getAllUserNames() throws Exception
+	{
+		ArrayList<String> usernames = new ArrayList<>();
+		conn = this.ds.getConnection();
+		String sql = "select * from user";
+		stmt = conn.createStatement();
+		rs = stmt.executeQuery(sql);
+		
+		while(rs.next())
+		{
+			usernames.add(rs.getString("uname"));
+		}	
+		return usernames;
+	}
 
 	public User searchUsername(String uName) throws Exception
 	{
@@ -62,7 +77,7 @@ public class UserDbUtil {
 		stmt = conn.createStatement();
 		rs = stmt.executeQuery(sql);
 		
-		while(rs.next())
+		if(rs.next())
 		{
 			u = new User(rs.getString("fname"),rs.getString("lname"),rs.getString("uname"));
 		}
