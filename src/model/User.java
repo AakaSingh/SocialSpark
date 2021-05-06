@@ -21,8 +21,8 @@ public class User {
 		this.posts = posts;
 	}
 	
-	public User(String fName, String lName, String userName) {
-		
+	public User(int userId, String fName, String lName, String userName) {
+		this.userId = userId;
 		this.fName = fName;
 		this.lName = lName;
 		this.userName = userName;

@@ -57,9 +57,13 @@ public class NotificationActions extends HttpServlet {
 			if(action.equals("clr"))
 			{
 				userdb.notifSeen(currentUser.getUserId());
-				RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+currentUser.getUserName());
-				dispatcher.forward(request,response);
 			}
+			else
+			{
+				userdb.acceptRequest(Integer.parseInt(request.getParameter("nid")), currentUser.getUserId(),Integer.parseInt(request.getParameter("uid")));
+			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+currentUser.getUserName());
+			dispatcher.forward(request,response);
 		}
 		catch(Exception e)
 		{

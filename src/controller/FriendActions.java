@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -76,6 +77,8 @@ public class FriendActions extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+cUser.getUserName());
+		dispatcher.forward(request, response);
 	}
 
 	/**

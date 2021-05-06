@@ -5,7 +5,7 @@ public class Notification {
 	User sender;
 	int type;
 	
-	public Notification(int notifId, User sender, int type) {
+	public Notification(int notifId,int type,  User sender) {
 		this.notifId = notifId;
 		this.sender = sender;
 		this.type = type;

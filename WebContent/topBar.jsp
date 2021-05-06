@@ -8,11 +8,12 @@
 <title>Insert title here</title>
 
 <style>
+li{
+	display: inline;	
+}
+
 #myInput {
   box-sizing: border-box;
-  background-image: url('searchicon.png');
-  background-position: 14px 12px;
-  background-repeat: no-repeat;
   font-size: 16px;
   padding: 14px 20px 12px 45px;
   border: none;
@@ -20,11 +21,6 @@
 }
 
 #myInput:focus {outline: 3px solid #ddd;}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
 
 .dropdown-content {
   position: absolute;
@@ -43,6 +39,11 @@
 }
 
 .dropdown a:hover {background-color: #ddd;}
+
+#logout
+{
+	float: right;
+}
 </style>
 
 
@@ -69,11 +70,21 @@ function filter()
 
 </head>
 <body>
+	<ul>
+	<li>
 	<div id="myDropdown" class="dropdown-content">
     <input type="text" placeholder="Search.." id="myInput" onkeyup="filter()">
     <c:forEach var="temp" items="${allUsers}">
     	<a href="./LoadProfile?profileUser=${temp}">${temp}</a>
     </c:forEach>
-  </div>
+  	</div>
+  	</li>
+  	<li>
+  	<div>
+  	<a href="./LogOut"><button id="logout">LogOut</button></a>
+  	</div>
+  	</li>
+  	</ul>
+  	
 </body>
 </html>

@@ -79,7 +79,7 @@ public class UserDbUtil {
 		
 		if(rs.next())
 		{
-			u = new User(rs.getString("fname"),rs.getString("lname"),rs.getString("uname"));
+			u = new User(id,rs.getString("fname"),rs.getString("lname"),rs.getString("uname"));
 		}
 		return u;
 	}
@@ -88,13 +88,17 @@ public class UserDbUtil {
 	{
 		ArrayList<Notification> notifications = new ArrayList<>();
 		conn = this.ds.getConnection();
-		String sql = "select * from notification where reciever_id = "+userId;
+		String sql = "select * from notifications where reciever_id = "+userId;
 		stmt = conn.createStatement();
 		rs = stmt.executeQuery(sql);
 		
 		while(rs.next())
 		{
-			notifications.add(new Notification(rs.getInt("notif_id"),getUserById(rs.getInt("sender_id")),rs.getInt("notif_type")));
+			int senderId = rs.getInt(2);
+			int x = rs.getInt(1);
+			int y = rs.getInt(4);
+
+			notifications.add(new Notification(x,y,getUserById(senderId)));
 		}  
 		return notifications;
 	}
@@ -177,7 +181,7 @@ public class UserDbUtil {
 			stmt = conn.createStatement();
 			String sql = "insert into messages values("+senderId+","+recieverId+",'"+msg_content+"',current_time)";
 			stmt.executeUpdate(sql);
-			sql = "insert into notification(sender_id,reciever_id,notif_type,time) values("+senderId+","+recieverId+",1,current_time)";
+			sql = "insert into notifications(sender_id,reciever_id,typeofnotif,notif_time) values("+senderId+","+recieverId+",1,current_time)";
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -192,7 +196,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "delete from notification where reciever_id = "+ user + " and notif_type = 1";
+			String sql = "delete from notifications where reciever_id = "+ user + " and typeofnotif = 1";
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -207,10 +211,12 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "delete from notification where notif_id = "+ notifId;
+			String sql = "delete from notifications where notif_id = "+ notifId;
 			stmt.executeUpdate(sql);
 			sql = "insert into friends values("+userOne+","+userTwo+",1)";
+			stmt.executeUpdate(sql);
 			sql = "insert into friends values("+userTwo+","+userOne+",1)";
+			stmt.executeUpdate(sql);
 		}
 		finally
 		{
@@ -241,7 +247,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "insert into notification(sender_id,reciever_id,notif_type,time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
+			String sql = "insert into notifications(sender_id,reciever_id,typeofnotif,notif_time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
 			stmt.executeUpdate(sql);
 		}
 		finally

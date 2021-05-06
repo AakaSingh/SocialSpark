@@ -65,10 +65,10 @@ table
 	<tr><td><a href="./LoadProfile?profileUser=${temp}">${temp}</a></td></tr>
 	<c:choose>
 		<c:when test="${userFriends.indexOf(temp) == -1}">
-				<a href=".FriendActions/friend=${temp}&act=req"><button>Send Request</button></a>
+				<a href="./FriendActions?friend=${temp}&act=req"><button>Send Request</button></a>
 		</c:when>
 		<c:otherwise>
-				<a href=".FriendActions/friend=${temp}&act=rem"><button>Remove Friend</button></a>
+				<a href="./FriendActions?friend=${temp}&act=rem"><button>Remove Friend</button></a>
 		</c:otherwise>
 	</c:choose>
 </c:forEach>

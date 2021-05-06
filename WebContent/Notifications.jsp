@@ -16,7 +16,7 @@
 	New Message : ${temp.sender.getUserName()} 
 </c:when>
 <c:otherwise>
-	Friend Request : ${temp.sender.getUserName()}<button>Accept</button>
+	Friend Request : ${temp.sender.getUserName()}<a href="./NotificationActions?act=acpt&nid=${temp.getNotifId()}&uid=${temp.sender.getUserId()}"><button>Accept</button></a>
 </c:otherwise>
 </c:choose>
 </c:forEach>
