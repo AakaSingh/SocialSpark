@@ -8,8 +8,27 @@
 <title>Insert title here</title>
 
 <style>
-li{
-	display: inline;	
+
+#topBar
+{
+	background-color: lightblue;
+	font-family: arial;
+	height:50px;
+	width: 100%;
+	vertical-align: middle;
+}
+
+#top
+{
+	float: right;
+	display: inline-block;
+	margin: 10px;
+}
+
+#myDropdown
+{
+	float: left;
+	display: inline-block;
 }
 
 #myInput {
@@ -17,13 +36,12 @@ li{
   font-size: 16px;
   padding: 14px 20px 12px 45px;
   border: none;
-  border-bottom: 1px solid #ddd;
+
 }
 
 #myInput:focus {outline: 3px solid #ddd;}
 
 .dropdown-content {
-  position: absolute;
   background-color: #f6f6f6;
   min-width: 230px;
   overflow: auto;
@@ -40,10 +58,6 @@ li{
 
 .dropdown a:hover {background-color: #ddd;}
 
-#logout
-{
-	float: right;
-}
 </style>
 
 
@@ -70,21 +84,37 @@ function filter()
 
 </head>
 <body>
-	<ul>
-	<li>
+<div id="topBar">
 	<div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filter()">
-    <c:forEach var="temp" items="${allUsers}">
-    	<a href="./LoadProfile?profileUser=${temp}">${temp}</a>
-    </c:forEach>
+	    <input type="text" placeholder="Search.." id="myInput" onkeyup="filter()">
+	    
+	    <c:forEach var="temp" items="${allUsers.values()}">
+	    	<a href="./LoadProfile?profileUser=${temp}">${temp}</a>
+	    </c:forEach>
+	    
+	</div>
+	
+	<div id="top">
+	  	<a href="./LogOut"><button id="logout">LogOut</button></a>
   	</div>
-  	</li>
-  	<li>
-  	<div>
-  	<a href="./LogOut"><button id="logout">LogOut</button></a>
-  	</div>
-  	</li>
-  	</ul>
   	
+  	<div id="top">
+  		<c:if test="${profileUser.getUserName().equals(currentUser.getUserName())}">
+		<a href="./Notifications.jsp">Notifications : ${notifications.size()}</a>
+		</c:if>
+  	</div>
+  	
+  	<div id="top">
+  		<a href="./LoadHomePage">Home</a>
+  	</div>
+  	
+  	<div id="top">
+  		<a href="./LoadProfile?profileUser=${currentUser.getUserName()}">Profile</a>
+  	</div>
+  	
+  	<div id="top">
+  		<a href = "FriendsList.jsp"><img src="./images/chat.png" class="icon"></a>
+  	</div>
+</div>
 </body>
 </html>

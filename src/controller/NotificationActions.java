@@ -57,18 +57,21 @@ public class NotificationActions extends HttpServlet {
 			if(action.equals("clr"))
 			{
 				userdb.notifSeen(currentUser.getUserId());
+				System.out.print("done");
 			}
 			else
 			{
 				userdb.acceptRequest(Integer.parseInt(request.getParameter("nid")), currentUser.getUserId(),Integer.parseInt(request.getParameter("uid")));
+				session.setAttribute("userFriends", userdb.getFriends(currentUser));
 			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+currentUser.getUserName());
-			dispatcher.forward(request,response);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+currentUser.getUserName());
+		dispatcher.forward(request,response);
 	}
 
 	/**

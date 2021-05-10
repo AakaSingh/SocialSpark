@@ -10,7 +10,7 @@
 <body>
 
 <table>
-<c:forEach var="temp" items="${friends}">
+<c:forEach var="temp" items="${userFriends}">
 	<tr><td><a href="./LoadMessages?chat=${temp}">${temp}</a></td></tr>
 </c:forEach>
 </table>

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.sql.DataSource;
 
@@ -26,9 +27,9 @@ public class UserDbUtil {
 		this.ds = ds;
 	}
 	
-	public ArrayList<String> getAllUserNames() throws Exception
+	public HashMap<Integer,String> getAllUsers() throws Exception
 	{
-		ArrayList<String> usernames = new ArrayList<>();
+		HashMap<Integer,String> usernames = new HashMap<Integer,String>();
 		conn = this.ds.getConnection();
 		String sql = "select * from user";
 		stmt = conn.createStatement();
@@ -36,8 +37,9 @@ public class UserDbUtil {
 		
 		while(rs.next())
 		{
-			usernames.add(rs.getString("uname"));
+			usernames.put(rs.getInt("user_id"),rs.getString("uname"));
 		}	
+		
 		return usernames;
 	}
 
@@ -88,8 +90,8 @@ public class UserDbUtil {
 	{
 		ArrayList<Notification> notifications = new ArrayList<>();
 		conn = this.ds.getConnection();
-		String sql = "select * from notifications where reciever_id = "+userId;
 		stmt = conn.createStatement();
+		String sql = "select * from notifications where reciever_id = " + userId;
 		rs = stmt.executeQuery(sql);
 		
 		while(rs.next())
@@ -100,6 +102,7 @@ public class UserDbUtil {
 
 			notifications.add(new Notification(x,y,getUserById(senderId)));
 		}  
+		
 		return notifications;
 	}
 	
@@ -179,7 +182,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "insert into messages values("+senderId+","+recieverId+",'"+msg_content+"',current_time)";
+			String sql = "insert into messages values("+senderId+","+recieverId+",\""+msg_content+"\",current_time)";
 			stmt.executeUpdate(sql);
 			sql = "insert into notifications(sender_id,reciever_id,typeofnotif,notif_time) values("+senderId+","+recieverId+",1,current_time)";
 			stmt.executeUpdate(sql);
@@ -300,5 +303,4 @@ public class UserDbUtil {
 			System.out.println(e.getMessage());
 		}
 	}
-	
 }

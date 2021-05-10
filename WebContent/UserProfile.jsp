@@ -1,83 +1,64 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="./topBar.jsp"/>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
 <title>User Profile</title>
-<style>
-body
-{
-	background-image : linear-gradient(to right, rgba(105, 34, 199,0), rgba(105, 34, 199,1));
-}
-
-.postDiv
-{
-	box-shadow :  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	background-color: black;
-	color: grey;
-	float : left;
-	margin: 30px;
-	width: 200px;
-	height: 300px;
-}
-textarea
-{
-	background-color: white;
-	height: 200px;
-	width: 200px;
-	border: none;
-}
-table
-{
-	border: none;
-	border-collapse: collapse;
-	width: 100%;
-	height: 100%;
-}
-
-#lik
-{
-	height: 20px;
-	width: 20px;
-	text-align: center;
-	vertical-align: middle:
-}
-</style>
+<link rel="stylesheet" href="./css/userprofile.css" />
 
 </head>
-
 <body>
-
-<jsp:include page="./topBar.jsp"/>
-
-<h1> ${profileUser.getUserName()} 's Profile</h1>
-
-<c:if test="${profileUser.getUserName().equals(currentUser.getUserName())}">
-<a href="./Notifications.jsp">Notifications : ${notifications.size()}</a>
-</c:if>
+<br><br>
 
 
+
+
+<div id="friends">
 <h3>Friends : </h3>
-<table>
+<br>
 <c:forEach var="temp" items="${friends}">
-	<tr><td><a href="./LoadProfile?profileUser=${temp}">${temp}</a></td></tr>
+	<a href="./LoadProfile?profileUser=${temp}">${temp}</a>
 	<c:choose>
 		<c:when test="${userFriends.indexOf(temp) == -1}">
-				<a href="./FriendActions?friend=${temp}&act=req"><button>Send Request</button></a>
+				<a href="./FriendActions?friend=${temp}&act=req"><img src="./images/sendrequest.png" class="icon"></a>
 		</c:when>
 		<c:otherwise>
-				<a href="./FriendActions?friend=${temp}&act=rem"><button>Remove Friend</button></a>
+				<a href="./FriendActions?friend=${temp}&act=rem"><img src="./images/removeuser.png" class="icon"></a>
 		</c:otherwise>
 	</c:choose>
+	<br>
 </c:forEach>
-</table>
+</div>
+
+<div id="main">
+<div id="details">
+<img src="./images/profile.png" class="profile">
+<h1> ${profileUser.getUserName()}</h1>
+</div>
+
+<div id="tl">
+<c:choose>
+	<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
+		<div class="postDiv">
+		<form action="./PostActions?act=new" method="post">
+			<table>
+				<tr><td colspan="3">What's on Your Mind</td></tr>
+				<tr><td colspan="3"><textarea name="postContent"></textarea>
+				<tr><td><button type="submit">Post</button></td></tr>
+			</table>
+		</form>
+		</div>
+	</c:when>
+</c:choose>
+
 
 <c:forEach var="temp" items="${profileUser.getPosts()}">
 <div class="postDiv">
 	<table>
-	<tr><td>${profileUser.getUserName()}</td></tr>
+	<tr><td colspan="3">${profileUser.getUserName()}</td></tr>
 	<c:choose>
 	<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
 	<form method="post" action="./PostActions?act=edit&pId=${temp.getPostId()}">
@@ -96,10 +77,7 @@ table
 	</table>
 </div>
 </c:forEach>
-<br>
-<c:if test="${profileUser.getUserName().equals(currentUser.getUserName())}">
-<a href = "FriendsList.jsp">Chat</a>
-</c:if>
-
+</div>
+</div>
 </body>
 </html>

@@ -52,7 +52,8 @@ public class PostActions extends HttpServlet {
 		
 		HttpSession session  = request.getSession();
 		String desiredAction = request.getParameter("act");
-		int pId = Integer.parseInt(request.getParameter("pId"));
+		String page = null;
+		page = request.getParameter("page");
 		User u = (User)session.getAttribute("currentUser");
 		User u1 = (User)session.getAttribute("profileUser");
 		
@@ -60,17 +61,34 @@ public class PostActions extends HttpServlet {
 		{
 			if(desiredAction.equals("edit"))
 			{
+				int pId = Integer.parseInt(request.getParameter("pId"));
 				String content = request.getParameter("postContent");
 				postdb.updatePost(pId,content);
 			}
 			else if(desiredAction.equals("lik"))
 			{
+				int pId = Integer.parseInt(request.getParameter("pId"));
 				userdb.likeDislikePost(u.getUserId(), pId);
 			}
 			else if(desiredAction.equals("del"))
 			{
+				int pId = Integer.parseInt(request.getParameter("pId"));
 				postdb.delPost(pId);
 			}
+			else if(desiredAction.equals("new"))
+			{
+				String content = request.getParameter("postContent");
+				postdb.addPost(u.getUserId(), content);
+			}
+			if(page!=null)
+			{
+				if(page.equals("home"))
+				{
+					RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadHomePage");
+					dispatcher.forward(request,response);
+				}
+			}
+			
 			u = userdb.searchUsername(u.getUserName());
 			session.setAttribute("currentUser", u);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+u1.getUserName());

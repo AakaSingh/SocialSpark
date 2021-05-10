@@ -61,7 +61,7 @@ public class PostDbUtil {
 		{
 			conn = this.ds.getConnection();
 			
-			String sql = "select * from post join user on post.user_id = user.user_id where user.uname = '" + uName + "' order by post.post_date" ;
+			String sql = "select * from post join user on post.user_id = user.user_id where user.uname = '" + uName + "' order by post.post_date desc" ;
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			ResultSet rstemp = null;
@@ -96,7 +96,7 @@ ArrayList<Post> posts = new ArrayList<>();
 		{
 			conn = this.ds.getConnection();
 			
-			String sql = "select * from post order by post_date" ;
+			String sql = "select * from post order by post_date desc" ;
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			ResultSet rstemp = null;
@@ -120,6 +120,22 @@ ArrayList<Post> posts = new ArrayList<>();
 		}		
 		
 		return posts;
+	}
+	
+	public void addPost(int userId, String content) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			
+			String sql = "insert into post(content,post_date,user_id) values('"+content+"',current_time,"+userId+")" ;
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
 	}
 	
 	

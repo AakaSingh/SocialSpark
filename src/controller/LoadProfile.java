@@ -55,7 +55,6 @@ public class LoadProfile extends HttpServlet {
 		User currentUser = (User)session.getAttribute("currentUser");
 		User profileUser;
 		
-		
 		if(profileU.equals("none"))
 		{
 			profileUser = (User)session.getAttribute("profileUser");

@@ -1,10 +1,8 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.annotation.Resource;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,28 +11,28 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import db.PostDbUtil;
 import db.UserDbUtil;
-import model.User;
 
 /**
- * Servlet implementation class FriendActions
+ * Servlet implementation class LoadHomePage
  */
-@WebServlet("/FriendActions")
-public class FriendActions extends HttpServlet {
+@WebServlet("/LoadHomePage")
+public class LoadHomePage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FriendActions() {
+    public LoadHomePage() {
         super();
         // TODO Auto-generated constructor stub
     }
     
-
     @Resource(name="jdbc/socialproject")
     private DataSource ds;
     private UserDbUtil userdb;
+    private PostDbUtil postdb;
 
     
     
@@ -44,6 +42,7 @@ public class FriendActions extends HttpServlet {
 		super.init();
 		
 		userdb = new UserDbUtil(ds);
+		postdb = new PostDbUtil(ds);
 	}
 
 
@@ -54,31 +53,15 @@ public class FriendActions extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		HttpSession session = request.getSession();
-		String action = request.getParameter("act");
-		User cUser = (User)session.getAttribute("currentUser");
-		try 
-		{
-			User friend = (User)userdb.searchUsername(request.getParameter("friend"));
-			
-				if(action.equals("rem"))
-				{
-					userdb.removeFriend(cUser, friend);
-					ArrayList<String> userFriends = new ArrayList<>();
-					userFriends = userdb.getFriends(cUser);
-					session.setAttribute("userFriends", userFriends);
-				}
-				else if(action.equals("req"))
-				{
-					userdb.sendRequest(cUser, friend);
-				}
+		
+		try {
+		session.setAttribute("allPosts",postdb.getAllPosts());
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("./LoadProfile?profileUser="+cUser.getUserName());
-		dispatcher.forward(request, response);
+		response.sendRedirect("./Home.jsp");
 	}
 
 	/**
