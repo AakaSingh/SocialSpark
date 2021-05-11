@@ -13,9 +13,6 @@
 <body>
 <br><br>
 
-
-
-
 <div id="friends">
 <h3>Friends : </h3>
 <br>
@@ -34,50 +31,87 @@
 </div>
 
 <div id="main">
-<div id="details">
-<img src="./images/profile.png" class="profile">
-<h1> ${profileUser.getUserName()}</h1>
-</div>
+	<div id="details">
+		<img src="./images/profile.png" class="profile">
+		<h1> ${profileUser.getUserName()}</h1>
+	</div>
 
-<div id="tl">
-<c:choose>
-	<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
-		<div class="postDiv">
-		<form action="./PostActions?act=new" method="post">
-			<table>
-				<tr><td colspan="3">What's on Your Mind</td></tr>
-				<tr><td colspan="3"><textarea name="postContent"></textarea>
-				<tr><td><button type="submit">Post</button></td></tr>
-			</table>
-		</form>
+	<div id="tl">
+		<c:choose>
+			<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
+				<div class="postDiv">
+				<form action="./PostActions?act=new" method="post">
+					<table>
+						<tr><td colspan="3">What's on Your Mind</td></tr>
+						<tr><td colspan="3"><textarea name="postContent"></textarea>
+						<tr><td><button type="submit">Post</button></td></tr>
+					</table>
+				</form>
+				</div>
+			</c:when>
+		</c:choose>
+	
+	
+		<c:forEach var="temp" items="${profileUser.getPosts()}">
+			<div class="postDiv">
+				${profileUser.getUserName()}
+				<c:choose>
+					<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
+					
+						<form method="post" action="./PostActions?act=edit&pId=${temp.getPostId()}">
+						<textarea name="postContent">${temp.content}</textarea>
+						<button id="edit" name="edit" type="submit">Save Edit</button>
+						</form>
+						<a href="./PostActions?act=del&pId=${temp.getPostId()}"><button>Delete</button></a>
+						
+					</c:when>
+					
+					<c:otherwise>
+					
+						<textarea disabled>${temp.content}</textarea>
+						<a href="./PostActions?act=sav&pId=${temp.getPostId()}"><button>Save</button></a>
+						
+					</c:otherwise>
+				</c:choose>
+				
+				<a href="./PostActions?act=lik&pId=${temp.getPostId()}"><button>Like</button></a><input type="text" placeholder="${temp.getLikes()}" disabled id="lik"/></td>
+				<span style="font-size: 60%">${temp.getDate()} </span>	
+			</div>
+		</c:forEach>
+		
+		<script>
+			function ableDisable()
+			{
+				  var x = document.getElementById('sv');
+				  var y = document.getElementById('svbtn');
+				  if (x.style.display === 'none') {
+				    x.style.display = 'block';
+				    y.value = 'Hide Saved Posts';
+				  } else {
+				    x.style.display = 'none';
+				    y.value = 'View Saved Posts';
+				  }
+			}
+		</script>
+		
+		<input onclick="ableDisable()" type="button" value="View Saved Posts" id="svbtn"></input>
+		
+		<div id="sv">	
+			<c:forEach var="temp" items="${profileUser.getSavedPosts()}">
+				<div class="PostDiv">
+					${profileUser.getUserName()}
+				
+							<textarea disabled>${temp.content}</textarea>
+							<a href="./PostActions?act=sav&pId=${temp.getPostId()}"><button>Save</button></a>
+					
+					<a href="./PostActions?act=lik&pId=${temp.getPostId()}"><button>Like</button></a><input type="text" placeholder="${temp.getLikes()}" disabled id="lik"/></td>
+					<span style="font-size: 60%">${temp.getDate()} </span>
+				</div>
+			</c:forEach>
 		</div>
-	</c:when>
-</c:choose>
-
-
-<c:forEach var="temp" items="${profileUser.getPosts()}">
-<div class="postDiv">
-	<table>
-	<tr><td colspan="3">${profileUser.getUserName()}</td></tr>
-	<c:choose>
-	<c:when test="${profileUser.getUserName().equals(currentUser.getUserName())}">
-	<form method="post" action="./PostActions?act=edit&pId=${temp.getPostId()}">
-	<tr><td  colspan = "3"><textarea name="postContent">${temp.content}</textarea></td></tr>
-	<tr><td><button id="edit" name="edit" type="submit">Save Edit</button></td>
-	</form>
-	<td><a href="./PostActions?act=del&pId=${temp.getPostId()}"><button>Delete</button></a></td>
-	</c:when>
-	<c:otherwise>
-	<tr><td  colspan = "3"><textarea disabled>${temp.content}</textarea></td></tr>
-	<td><a href="./PostActions?act=sav&pId=${temp.getPostId()}"><button>Save</button></a></td>
-	</c:otherwise>
-	</c:choose>
-	<tr><td><a href="./PostActions?act=lik&pId=${temp.getPostId()}"><button>Like</button></a><input type="text" placeholder="${temp.getLikes()}" disabled id="lik"/></td>
-	<tr><td> <span style="font-size: 60%">${temp.getDate()} </span></td></tr>
-	</table>
-</div>
-</c:forEach>
-</div>
+	</div>
+	
+	
 </div>
 </body>
 </html>

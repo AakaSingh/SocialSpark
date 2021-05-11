@@ -113,7 +113,7 @@ function filter()
   	</div>
   	
   	<div id="top">
-  		<a href = "FriendsList.jsp"><img src="./images/chat.png" class="icon"></a>
+  		<a href = "./LoadMessages?chat=${userFriends.get(0)}"><img src="./images/chat.png" class="icon"></a>
   	</div>
 </div>
 </body>

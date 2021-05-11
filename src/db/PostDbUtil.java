@@ -88,9 +88,46 @@ public class PostDbUtil {
 		
 	}
 	
+	public ArrayList<Post> getSavedPostsByUsername(String uName) throws Exception
+	{
+		ArrayList<Post> posts = new ArrayList<>();
+		
+		try
+		{
+			conn = this.ds.getConnection();
+			
+			String sql = "select * from post join savesdata on post.post_id = savesdata.post_id"
+					   + " join user on savesdata.user_id = user.user_id"
+					   + " where user.uname = '" + uName + "' order by post.post_date desc" ;
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			ResultSet rstemp = null;
+			int noOfLikes;
+			
+			while(rs.next())
+			{
+				rstemp = null;
+				noOfLikes = 0;
+				sql = "select count(*) as nooflikes from likesdata where post_id = " + rs.getInt("post_id");
+				stmt = conn.createStatement();
+				rstemp = stmt.executeQuery(sql);
+				if(rstemp.next())
+					noOfLikes = rstemp.getInt("nooflikes");
+				posts.add(new Post(rs.getInt("user_id"),rs.getInt("post_id"),rs.getString("content"),rs.getString("post_date").toString(),noOfLikes));	
+			}
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}		
+		
+		return posts;	
+	}
+	
+	
 	public ArrayList<Post> getAllPosts() throws Exception
 	{
-ArrayList<Post> posts = new ArrayList<>();
+		ArrayList<Post> posts = new ArrayList<>();
 		
 		try
 		{
@@ -138,6 +175,29 @@ ArrayList<Post> posts = new ArrayList<>();
 		}
 	}
 	
+	public void savePost(int userId, int pId) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "select * from savesdata where user_id = "+ userId + " and post_id = "+ pId;
+			rs = stmt.executeQuery(sql);
+			
+			if(rs.next())
+				sql = "delete from savesdata where user_id = "+ userId + " and post_id = "+ pId;
+			
+			else
+				sql = "insert into savesdata values("+ pId +","+userId+")";
+			
+			System.out.print(sql);
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
 	
 	void close(Connection conn,Statement stmt,PreparedStatement pstmt,ResultSet rs)
 	{

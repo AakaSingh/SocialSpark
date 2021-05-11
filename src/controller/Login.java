@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
@@ -50,8 +49,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession();
 		String uName = request.getParameter("uName");
 		String pass = request.getParameter("pass");
 		try
@@ -61,7 +59,7 @@ public class Login extends HttpServlet {
 			{
 				if(currentUser.getPass().equals(pass))
 				{
-					HttpSession session = request.getSession();
+					session = request.getSession();
 					session.setAttribute("currentUser", currentUser);
 					session.setAttribute("profileUser", currentUser);
 					session.setAttribute("allUsers", userdb.getAllUsers());
@@ -70,12 +68,15 @@ public class Login extends HttpServlet {
 				}
 				else
 				{
-					out.print("Incorrect Password!");
+					session.setAttribute("error","Incorrect Password");
+					response.sendRedirect("./LoginRegister.jsp");
 				}
 			}
 			else
 			{
-				out.print("Incorrect Username");
+
+				session.setAttribute("error","Incorrect Username");
+				response.sendRedirect("./LoginRegister.jsp");
 			}
 		
 		}

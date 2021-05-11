@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,18 @@
 <link rel="stylesheet" href="./css/register.css" />
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+
+<style type="text/css">
+	.err
+	{
+		color: blue;
+		font-family: arial;
+		border: none;
+		text-align: center;
+		padding: 5px;
+	}
+</style>
+
 </head>
 <body>
 	<div class="container">
@@ -22,6 +35,9 @@
               <i class="fas fa-lock"></i>
               <input type="password" placeholder="Password" name="pass" />
             </div>
+            <c:if test="${ error != null }">
+              <input class="err" type="text" placeholder="${error}" disabled />
+			</c:if>
             <input type="submit" value="Login" class="btn solid" />
           </form>
           <form method='post' action='./Register' class="sign-up-form">

@@ -10,8 +10,9 @@ public class User {
 	String userName;
 	String pass;
 	ArrayList<Post> posts;
+	ArrayList<Post> savedPosts;
 	
-	public User(int userId,String fName, String lName, String userName, String pass,ArrayList<Post> posts) {
+	public User(int userId,String fName, String lName, String userName, String pass,ArrayList<Post> posts,ArrayList<Post> savedPosts) {
 		
 		this.userId = userId;
 		this.fName = fName;
@@ -19,6 +20,7 @@ public class User {
 		this.userName = userName;
 		this.pass = pass;
 		this.posts = posts;
+		this.savedPosts = savedPosts;
 	}
 	
 	public User(int userId, String fName, String lName, String userName) {
@@ -36,6 +38,16 @@ public class User {
 	public void setPosts(ArrayList<Post> posts)
 	{
 		this.posts = posts;
+	}
+	
+	public ArrayList<Post> getSavedPosts()
+	{
+		return savedPosts;
+	}
+	
+	public void setSavedPosts(ArrayList<Post> savedPosts)
+	{
+		this.savedPosts = savedPosts;
 	}
 	
 	public int getUserId() {

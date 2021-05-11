@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import db.UserDbUtil;
@@ -48,16 +49,17 @@ public class Register extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
 		try {
-			if(userdb.registerUser(new User(0,request.getParameter("fName"),request.getParameter("lName"),request.getParameter("uName"),request.getParameter("pass"),null)))
+			if(userdb.registerUser(new User(0,request.getParameter("fName"),request.getParameter("lName"),request.getParameter("uName"),request.getParameter("pass"),null,null)))
 			{
 				out.print("User Registered");
 			}
 			else
 			{
-				out.print("Username already taken");
+				session.setAttribute("error", "Username Already Taken");
+				response.sendRedirect("./LoginRegister.jsp");
 			}
 		}
 		catch(Exception e)

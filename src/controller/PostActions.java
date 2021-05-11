@@ -80,6 +80,11 @@ public class PostActions extends HttpServlet {
 				String content = request.getParameter("postContent");
 				postdb.addPost(u.getUserId(), content);
 			}
+			else if(desiredAction.equals("sav"))
+			{
+				int pId = Integer.parseInt(request.getParameter("pId"));
+				postdb.savePost(u.getUserId(),pId);
+			}
 			if(page!=null)
 			{
 				if(page.equals("home"))

@@ -3,7 +3,6 @@ package db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +46,7 @@ public class UserDbUtil {
 	{
 		User tempUser = null;
 		ArrayList<Post> posts = new ArrayList<>();
+		ArrayList<Post> savedPosts = new ArrayList<>();
 		
 		try
 		{
@@ -61,7 +61,9 @@ public class UserDbUtil {
 				
 				PostDbUtil postdb = new PostDbUtil(ds);
 				posts = postdb.getPostsByUsername(uName);
-				tempUser = new User(rs.getInt("user_id"),rs.getString("fname"),rs.getString("lname"),rs.getString("uname"),rs.getString("pass"),posts);			
+				savedPosts = postdb.getSavedPostsByUsername(uName);
+				
+				tempUser = new User(rs.getInt("user_id"),rs.getString("fname"),rs.getString("lname"),rs.getString("uname"),rs.getString("pass"),posts,savedPosts);			
 			}
 		}
 		finally

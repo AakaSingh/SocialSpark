@@ -45,36 +45,59 @@ table{
 	height:100%;
 }
 
+#lft
+{
+	height: 100%;
+	width: 20%;
+	float: left;
+}
+#rgt
+{
+	height: 100%;
+	width: 70%;
+	float: right;
+}
+
 </style>
 </head>
 <body>
-<div class="msgbox">
-<table>
-<tr><th colspan="2">${chatUser.getUserName()} <th></tr>
-<tr><td colspan="2">
-<div class="chatbox">
-<c:forEach var="msg" items="${messages}">
-<c:choose>
-<c:when test="${msg.getSenderId().equals(currentUser.getUserId())}">
-	<div class="txtblob" style="float:right">
-		<span style="font-size: 50%">${msg.getTime()}</span><br>
-		${msg.getMsgContent()}<br>
-	</div>
-</c:when>
-<c:otherwise>
-	<div class="txtblob" style="float:left">
-		<span style="font-size: 50%">${msg.getTime()}</span> <br>
-		${msg.getMsgContent()}<br>
-	</div>
-</c:otherwise>
-</c:choose>
 
-</c:forEach>
+<div id="lft">
+	<table>
+		<c:forEach var="temp" items="${userFriends}">
+			<tr><td><a href="./LoadMessages?chat=${temp}">${temp}</a></td></tr>
+		</c:forEach>
+	</table>
 </div>
-</td></tr>
-<tr><form action="./NewMessage"><td><input type="text" name="txt"></td><td><button type="submit">Send</button></td></form></tr>
 
-</table>
+
+<div id="rgt">
+	<div class="msgbox">
+	<table>
+	<tr><th colspan="2">${chatUser.getUserName()} <th></tr>
+	<tr><td colspan="2">
+	<div class="chatbox">
+		<c:forEach var="msg" items="${messages}">
+			<c:choose>
+				<c:when test="${msg.getSenderId().equals(currentUser.getUserId())}">
+					<div class="txtblob" style="float:right">
+						<span style="font-size: 50%">${msg.getTime()}</span><br>
+						${msg.getMsgContent()}<br>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="txtblob" style="float:left">
+						<span style="font-size: 50%">${msg.getTime()}</span> <br>
+						${msg.getMsgContent()}<br>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+	</div>
+	</td></tr>
+	<tr><form action="./NewMessage"><td><input type="text" name="txt"></td><td><button type="submit">Send</button></td></form></tr>
+	</table>
+	</div>
 </div>
 </body>
 </html>
