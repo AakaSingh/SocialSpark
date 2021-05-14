@@ -8,14 +8,23 @@
 <title>Insert title here</title>
 
 <style>
+a
+{
+	text-decoration: none;
+	color: white;
+}
+a:hover
+{
+	color: grey;
+}
 
 #topBar
 {
-	background-color: lightblue;
 	font-family: arial;
-	height:50px;
+	height:150px;
 	width: 100%;
 	vertical-align: middle;
+	
 }
 
 #top
@@ -23,6 +32,16 @@
 	float: right;
 	display: inline-block;
 	margin: 10px;
+}
+
+#rightbar
+{
+	float: right;
+	padding: 20px 20px 20px 20px;
+	border-radius: 5px;
+	margin-right: 20%;
+	background-color: lightblue;
+	font-size: 120%;
 }
 
 #myDropdown
@@ -34,7 +53,7 @@
 #myInput {
   box-sizing: border-box;
   font-size: 16px;
-  padding: 14px 20px 12px 45px;
+  padding: 14px 20px 12px 20px;
   border: none;
 
 }
@@ -54,6 +73,13 @@
   padding: 12px 16px;
   text-decoration: none;
   display: none;
+}
+
+.icon
+{
+	height: 30px;
+	width: 30px;
+	border: none;
 }
 
 .dropdown a:hover {background-color: #ddd;}
@@ -86,7 +112,7 @@ function filter()
 <body>
 <div id="topBar">
 	<div id="myDropdown" class="dropdown-content">
-	    <input type="text" placeholder="Search.." id="myInput" onkeyup="filter()">
+	    <input type="text" placeholder="Search Users" id="myInput" onkeyup="filter()">
 	    
 	    <c:forEach var="temp" items="${allUsers.values()}">
 	    	<a href="./LoadProfile?profileUser=${temp}">${temp}</a>
@@ -94,8 +120,9 @@ function filter()
 	    
 	</div>
 	
+	<div id="rightbar">
 	<div id="top">
-	  	<a href="./LogOut"><button id="logout">LogOut</button></a>
+	  	<a href="./LogOut">LogOut</button></a>
   	</div>
   	
   	<div id="top">
@@ -114,6 +141,7 @@ function filter()
   	
   	<div id="top">
   		<a href = "./LoadMessages?chat=${userFriends.get(0)}"><img src="./images/chat.png" class="icon"></a>
+  	</div>
   	</div>
 </div>
 </body>

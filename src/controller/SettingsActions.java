@@ -1,9 +1,9 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,20 +16,20 @@ import db.UserDbUtil;
 import model.User;
 
 /**
- * Servlet implementation class LoadProfile
+ * Servlet implementation class SettingsActions
  */
-@WebServlet("/LoadProfile")
-public class LoadProfile extends HttpServlet {
+@WebServlet("/SettingsActions")
+public class SettingsActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoadProfile() {
+    public SettingsActions() {
         super();
         // TODO Auto-generated constructor stub
     }
-    
+
     @Resource(name="jdbc/socialproject")
     private DataSource ds;
     private UserDbUtil userdb;
@@ -49,56 +49,32 @@ public class LoadProfile extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		ArrayList<String> friends = new ArrayList<>();
-		String profileU = request.getParameter("profileUser");
-		HttpSession session =  request.getSession();
+		String action = request.getParameter("act");
+		HttpSession session = request.getSession();
 		User currentUser = (User)session.getAttribute("currentUser");
-		User profileUser;
-		
-		if(profileU.equals("none"))
+		try 
 		{
-			profileUser = (User)session.getAttribute("profileUser");
-			try {
-			friends = userdb.getFriends(profileUser);
-			if(friends.size() == 0)
+			if(action.equals("newpass"))
 			{
-				friends.add("Make Friends +");
+				String np = request.getParameter("pass");
+				userdb.changePass(currentUser,np);
 			}
-			session.setAttribute("notifications", userdb.getNotificationById(profileUser.getUserId()));
-			session.setAttribute("userFriends", friends);
-			session.setAttribute("friends", friends);
-			response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
+			else if(action.equals("clracnt"))
 			{
-				System.out.print("here");
-				e.printStackTrace();
+				userdb.clearData(currentUser);
+			}
+			else if(action.equals("delacnt"))
+			{
+				userdb.delUser(currentUser);
 			}
 		}
-		else
+		catch(Exception e)
 		{
-			try 
-			{
-				if(profileU.equals(currentUser.getUserName()))
-				{
-					session.setAttribute("notifications", userdb.getNotificationById(currentUser.getUserId()));
-				}
-				profileUser = userdb.searchUsername(profileU);
-				friends = userdb.getFriends(profileUser);
-				if(friends.size() == 0)
-				{
-					friends.add("Make Friends +");
-				}
-				session.setAttribute("friends", friends);
-				session.setAttribute("profileUser", profileUser);
-				response.sendRedirect("UserProfile.jsp");
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("./LogOut");
+		dispatcher.forward(request,response);
 	}
 
 	/**

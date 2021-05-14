@@ -71,6 +71,13 @@ public class FriendActions extends HttpServlet {
 				{
 					userdb.sendRequest(cUser, friend);
 				}
+				else if(action.equals("blk"))
+				{
+					userdb.blockfriend(cUser,friend);
+					ArrayList<String> userFriends = new ArrayList<>();
+					userFriends = userdb.getFriends(cUser);
+					session.setAttribute("userFriends", userFriends);
+				}
 		}
 		catch(Exception e)
 		{

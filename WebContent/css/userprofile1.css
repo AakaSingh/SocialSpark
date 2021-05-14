@@ -14,14 +14,21 @@ a:hover
 	color: grey;	
 }
 
+.iconbutton
+{
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+	border: none;
+	box-shadow :  0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 5px;
+}
+
 .icon
 {
-	
-	height: 20px;
-	width: 20px;
-	border-radius: 2px;
-	box-shadow :  0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-	background-color: white;
+	height: 30px;
+	width: 30px;
+	border: none;
 }
 
 .profile
@@ -34,7 +41,7 @@ a:hover
 #friends
 {
 	height: 300px;
-	width: 200px;
+	width: 22%;
 	float: left;
 	background-color: lightblue;
 	color: white;
@@ -46,7 +53,7 @@ a:hover
 
 a
 {
-	decoration: none;
+	text-decoration: none;
 	font-family: arial;
 }
 
@@ -73,7 +80,7 @@ a
 #main
 {
 	float: right;
-	width: 80%;
+	width: 75%;
 	height: 100%;
 	background-color: lightblue;
 	box-shadow :  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -84,12 +91,15 @@ a
 {
 	box-shadow :  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	background-color: white;
-	color: lightblue;
-	margin: auto;
+	color: black;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	width: 100%;
-	height: 200px;
+	height: 230px;
+	border-radius: 5px;
+	font-size: 120%;
+	padding: 5px;
+	border: 1px solid black;
 }
 
 #sv
@@ -102,15 +112,28 @@ textarea
 	background-color: white;
 	border: 1px solid lightblue;
 	height: 100px;
-	width: 80%;
+	width: 90%;
+	font-size: 120%;
 	margin: auto;
 }
 table
 {
 	border: none;
 	border-collapse: collapse;
+	font-size: 130%;
 	width: 100%;
-	height: 100%;
+	margin: auto;
+}
+
+#edit
+{
+	background-color: lightblue;
+	color: white;
+	height: 30px;
+	width: 80px;
+	margin: 5px;
+	box-shadow :  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border: none;
 }
 
 #lik

@@ -57,11 +57,12 @@ public class NotificationActions extends HttpServlet {
 			if(action.equals("clr"))
 			{
 				userdb.notifSeen(currentUser.getUserId());
-				System.out.print("done");
 			}
-			else
+			else if(action.equals("acpt"))
 			{
-				userdb.acceptRequest(Integer.parseInt(request.getParameter("nid")), currentUser.getUserId(),Integer.parseInt(request.getParameter("uid")));
+				int nid = Integer.parseInt(request.getParameter("nid"));
+				int uid = Integer.parseInt(request.getParameter("uid"));
+				userdb.acceptRequest(nid, currentUser.getUserId(),uid);
 				session.setAttribute("userFriends", userdb.getFriends(currentUser));
 			}
 		}

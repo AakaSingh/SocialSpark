@@ -52,11 +52,17 @@ public class LoadMessages extends HttpServlet {
 		// TODO Auto-generated method stub
 		ArrayList<Message> messages = new ArrayList<>();
 		String chatU = request.getParameter("chat");
+		System.out.print(chatU);
 		HttpSession session =  request.getSession();
+		User currentUser = (User)session.getAttribute("currentUser");
+		
+		if(chatU.equals("Make Friends  "))
+		{
+			response.sendRedirect("./LoadProfile?profileUser="+currentUser.getUserName());
+		}
 		
 		try {
 		User chatUser = userdb.searchUsername(chatU);
-		User currentUser = (User)session.getAttribute("currentUser");
 		messages = userdb.getMessages(currentUser, chatUser);
 		session.setAttribute("chatUser", chatUser);
 		session.setAttribute("messages", messages);

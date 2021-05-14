@@ -93,7 +93,7 @@ public class UserDbUtil {
 		ArrayList<Notification> notifications = new ArrayList<>();
 		conn = this.ds.getConnection();
 		stmt = conn.createStatement();
-		String sql = "select * from notifications where reciever_id = " + userId;
+		String sql = "select * from alerts where r_id = " + userId;
 		rs = stmt.executeQuery(sql);
 		
 		while(rs.next())
@@ -186,7 +186,7 @@ public class UserDbUtil {
 			stmt = conn.createStatement();
 			String sql = "insert into messages values("+senderId+","+recieverId+",\""+msg_content+"\",current_time)";
 			stmt.executeUpdate(sql);
-			sql = "insert into notifications(sender_id,reciever_id,typeofnotif,notif_time) values("+senderId+","+recieverId+",1,current_time)";
+			sql = "insert into alerts(s_id,r_id,typ,time) values("+senderId+","+recieverId+",1,current_time)";
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -201,7 +201,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "delete from notifications where reciever_id = "+ user + " and typeofnotif = 1";
+			String sql = "delete from alerts where r_id = "+ user + " and typ = 1";
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -216,11 +216,28 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "delete from notifications where notif_id = "+ notifId;
+			String sql = "delete from alerts where n_id = "+ notifId;
 			stmt.executeUpdate(sql);
 			sql = "insert into friends values("+userOne+","+userTwo+",1)";
 			stmt.executeUpdate(sql);
 			sql = "insert into friends values("+userTwo+","+userOne+",1)";
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void blockfriend(User f1, User f2) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "update friends set type = -1 where userid_one = "+ f1.getUserId()+" and userid_two = "+f2.getUserId();
+			stmt.executeUpdate(sql);
+			sql = "update friends set type = -1 where userid_one = "+ f2.getUserId()+" and userid_two = "+f1.getUserId();
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -252,7 +269,7 @@ public class UserDbUtil {
 		{
 			conn = this.ds.getConnection();
 			stmt = conn.createStatement();
-			String sql = "insert into notifications(sender_id,reciever_id,typeofnotif,notif_time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
+			String sql = "insert into alerts(s_id,r_id,typ,time) values("+sender.getUserId()+","+reciever.getUserId()+",0,current_time)";
 			stmt.executeUpdate(sql);
 		}
 		finally
@@ -278,6 +295,58 @@ public class UserDbUtil {
 			
 			System.out.print(sql);
 			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void changePass(User cu, String pass) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "update user set pass = '"+ pass +"' where user_id = "+cu.getUserId();
+			stmt.executeUpdate(sql);	
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void clearData(User cu) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "delete from post where user_id = "+cu.getUserId();
+			stmt.executeUpdate(sql);
+			sql = "delete from friends where userid_one = " + cu.getUserId() + " or userid_two = " + cu.getUserId();
+			stmt.executeUpdate(sql);
+			sql = "delete from messages where sender_id = " + cu.getUserId() + " or reciever_id = " + cu.getUserId();
+			stmt.executeUpdate(sql);
+			sql = "delete from savesdata where user_id = "+ cu.getUserId();
+			stmt.executeUpdate(sql);
+		}
+		finally
+		{
+			close(conn,stmt,pstmt,rs);
+		}
+	}
+	
+	public void delUser(User cu) throws Exception
+	{
+		try
+		{
+			conn = this.ds.getConnection();
+			stmt = conn.createStatement();
+			String sql = "delete from user where user_id = "+ cu.getUserId();
+			stmt.executeUpdate(sql);
+			clearData(cu);
 		}
 		finally
 		{
