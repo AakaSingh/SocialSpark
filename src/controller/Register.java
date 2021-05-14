@@ -54,7 +54,8 @@ public class Register extends HttpServlet {
 		try {
 			if(userdb.registerUser(new User(0,request.getParameter("fName"),request.getParameter("lName"),request.getParameter("uName"),request.getParameter("pass"),null,null)))
 			{
-				out.print("User Registered");
+				session.setAttribute("error", "Username Registered");
+				response.sendRedirect("./LoginRegister.jsp");
 			}
 			else
 			{
